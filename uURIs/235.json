@@ -1,0 +1,11 @@
+{
+  "name": "NFTs",
+  "description": "Random questions.",
+  "image": "ipfs://bafybeihupd6in77pipx2ozfw5ru6zakxms2a2ydn45bd3ut5alyjkvz3wy",
+  "atributes": [
+    {
+      "trait_type": "Revealed",
+      "value": "Unrevealed"
+    }
+  ]
+}
