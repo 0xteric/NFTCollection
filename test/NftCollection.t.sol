@@ -23,11 +23,13 @@ contract NftTest is Test {
 
     function testMint() public {
         vm.prank(user1);
+        uint mintAmount = 5;
+        nftCollection.mint(mintAmount);
 
-        nftCollection.mint();
-
-        address firstOwner = IERC721(address(nftCollection)).ownerOf(1);
-        assertEq(firstOwner, user1);
+        for (uint i = 1; i <= mintAmount; i++) {
+            address _owner = IERC721(address(nftCollection)).ownerOf(i);
+            assertEq(_owner, user1);
+        }
     }
 
     function testUpdateBaseURI() public {
@@ -47,7 +49,7 @@ contract NftTest is Test {
 
     function testTokenURI() public {
         vm.prank(user1);
-        nftCollection.mint();
+        nftCollection.mint(1);
         string memory tokenUri = nftCollection.tokenURI(1);
         string memory baseURI = nftCollection.baseUri();
 
@@ -59,9 +61,9 @@ contract NftTest is Test {
         for (uint i = 0; i <= 10; i++) {
             if (i == 10) {
                 vm.expectRevert("Sold out!");
-                nftCollection.mint();
+                nftCollection.mint(1);
             } else {
-                nftCollection.mint();
+                nftCollection.mint(1);
             }
         }
     }

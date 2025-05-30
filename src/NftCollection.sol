@@ -10,6 +10,7 @@ contract NftCollection is ERC721 {
 
     uint public nextTokenId;
     uint public totalSupply;
+    uint public maxMintAmountPerTx;
     string public baseUri;
     address public owner;
 
@@ -24,14 +25,19 @@ contract NftCollection is ERC721 {
         totalSupply = _totalSupply;
         baseUri = _baseUri;
         owner = msg.sender;
+        maxMintAmountPerTx = 10;
     }
 
-    function mint() external {
-        require(nextTokenId + 1 <= totalSupply, "Sold out!");
+    function mint(uint _amount) external {
+        require(_amount <= maxMintAmountPerTx, "Amount exceeds max!");
 
-        _safeMint(msg.sender, ++nextTokenId);
+        for (uint i = 0; i < _amount; i++) {
+            require(nextTokenId + 1 <= totalSupply, "Sold out!");
 
-        emit Minted(msg.sender, nextTokenId);
+            _safeMint(msg.sender, ++nextTokenId);
+
+            emit Minted(msg.sender, nextTokenId);
+        }
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
