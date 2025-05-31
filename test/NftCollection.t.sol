@@ -24,7 +24,8 @@ contract NftTest is Test {
     function testMint() public {
         vm.prank(user1);
         uint mintAmount = 5;
-        nftCollection.mint(mintAmount);
+        vm.deal(user1, 0.01 ether * mintAmount);
+        nftCollection.mint{value: 0.01 ether * mintAmount}(mintAmount);
 
         for (uint i = 1; i <= mintAmount; i++) {
             address _owner = IERC721(address(nftCollection)).ownerOf(i);
@@ -49,7 +50,8 @@ contract NftTest is Test {
 
     function testTokenURI() public {
         vm.prank(user1);
-        nftCollection.mint(1);
+        vm.deal(user1, 0.01 ether);
+        nftCollection.mint{value: 0.01 ether}(1);
         string memory tokenUri = nftCollection.tokenURI(1);
         string memory baseURI = nftCollection.baseUri();
 
@@ -66,5 +68,16 @@ contract NftTest is Test {
                 nftCollection.mint(1);
             }
         }
+    }
+
+    function testAddToWhitelist() public {
+        vm.prank(owner);
+
+        address[] memory addresses = new address[](1);
+        addresses[0] = user1;
+
+        nftCollection.addToWhitelist(addresses);
+
+        assertTrue(nftCollection.isWhitelisted(user1));
     }
 }
